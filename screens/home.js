@@ -16,8 +16,9 @@ import uk from '../assets/countries/uk.png';
 import usa from '../assets/countries/usa.png';
 import radar from '../assets/countries/radar.png';
 
-const Home = () => {
-    const [data, setData] = useState([]);
+const Home = ({data}) => {
+    
+    // const [data, setData] = useState([]);
     let wordsToCheck = ['americain', 'canadien', 'tunisien', 'euro', 'saoudien', 'turque', 'paysera', 'suisse', 'marocain', 'chinoi', 'sterling','paysera'];
     const pattern = /\d+./g;
 
@@ -36,61 +37,57 @@ const Home = () => {
         paysera: paysera,
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            let country = '';
-            let currencyList = [];
-            try {
-                const url = 'https://vikizia.com/devise.php';
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         let country = '';
+    //         let currencyList = [];
+    //         try {
+    //             const url = 'https://vikizia.com/devise.php';
 
-                const response = await axios.get(url);
-                const html = response.data;
-                const $ = load(html);
+    //             const response = await axios.get(url);
+    //             const html = response.data;
+    //             const $ = load(html);
 
-                // Select <p> tags with a class name containing the word "box"
-                const pTagsWithBox = $('p[class*="box"]');
+    //             // Select <p> tags with a class name containing the word "box"
+    //             const pTagsWithBox = $('p[class*="box"]');
 
-                // Extract the text content from the selected elements
-                const extractedData = [];
-                pTagsWithBox.each((index, element) => {
-                    let elementText = $(element).text().toLowerCase();
-                    console.log('Element Text:', elementText); // Debug log
+    //             // Extract the text content from the selected elements
+    //             const extractedData = [];
+    //             pTagsWithBox.each((index, element) => {
+    //                 let elementText = $(element).text().toLowerCase();
+    //                 // console.log('Element Text:', elementText); // Debug log
 
-                    wordsToCheck.forEach((word) => {
-                        if (elementText.includes(word)) {
-                            country = word;
-                        }
-                    });
+    //                 wordsToCheck.forEach((word) => {
+    //                     if (elementText.includes(word)) {
+    //                         country = word;
+    //                     }
+    //                 });
 
-                    currencyList.push(country);
+    //                 currencyList.push(country);
 
-                    let matches = elementText.match(pattern);
-                    if (matches) {
-                        console.log('Matches:', matches); // Debug log
-                        currencyList.push(...matches);
-                        extractedData.push([...currencyList]); // Copy the current list
-                    }
-                    currencyList = [];
-                });
+    //                 let matches = elementText.match(pattern);
+    //                 if (matches) {
+    //                     // console.log('Matches:', matches); // Debug log
+    //                     currencyList.push(...matches);
+    //                     extractedData.push([...currencyList]); // Copy the current list
+    //                 }
+    //                 currencyList = [];
+    //             });
 
-                setData(extractedData);
-                console.log('Extracted Data:', extractedData); // Debug log
-            } catch (error) {
-                console.error(`There was an error fetching the URL: ${error}`);
-            }
-        };
+    //             setData(extractedData);
+    //             // console.log('Extracted Data:', extractedData); // Debug log
+    //         } catch (error) {
+    //             console.error(`There was an error fetching the URL: ${error}`);
+    //         }
+    //     };
 
-        fetchData();
-    }, []);
+    //     fetchData();
+    // }, []);
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <View style={{ alignItems: 'center', flexDirection: 'row', marginTop: 50, marginBottom: 20 }}>
-            <Text style={styles.title}>Devises Radar</Text>
-            <Image source={radar} style={{ width: 30, height: 30, marginLeft: 10 }} />
-            </View>
             <Text style={styles.date}>Derniere Mise à jour: {new Date().toLocaleDateString()}</Text>
-            {data.map((elem, index) => (
+            {data?.map((elem, index) => (
                 <View key={index} style={styles.dataContainer}>
                     <Image source={countryImages[elem[0]]} style={{ width: 30, height: 30 }} />
                     <View style={{alignItems: 'center' }}>
@@ -119,11 +116,7 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: "white"
     },
-    title: {
-        fontSize: 24,
-        marginVertical: 10,
-        fontFamily: 'HankenGrotesk_500Medium',
-    },
+   
     dataContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
